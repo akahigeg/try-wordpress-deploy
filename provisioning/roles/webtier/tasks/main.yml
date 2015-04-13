@@ -1,0 +1,88 @@
+---
+# httpd
+- name: httpd is installed
+  yum: pkg=httpd state=installed
+
+- name: httpd is runnning and enabled
+  service: name=httpd state=running enabled=yes
+
+- name: httpd is configured
+  notify:
+    - restart httpd
+  copy: src="httpd.conf" dest="/etc/httpd/conf/httpd.conf" owner=root group=root mode=0644
+
+# mysql
+- name: mysql server is installed
+  yum: pkg=mysql-server state=installed
+
+- name: mysql-devel is installed
+  yum: pkg=mysql-devel state=installed
+
+- name: mysqld is runnning and enabled
+  service: name=mysqld state=running enabled=yes
+
+- name: python-setuptools is installed
+  yum: pkg=python-setuptools state=installed
+
+- name: python-devel is installed
+  yum: pkg=python-devel state=installed
+
+- easy_install: name=pip
+- pip: name=MySQL-python
+
+- name: db for wordpress is created
+  mysql_db: name=wpdb state=present
+
+- name: db user for wordpress is created
+  mysql_user: name=wpuser password=easypassword priv=wpdb.*:ALL state=present
+
+# php
+- name: php is installed
+  yum: pkg=php state=installed
+  notify:
+    - restart httpd
+
+- name: php-pear is installed
+  yum: pkg=php-pear state=installed
+  notify:
+    - restart httpd
+
+- name: php-gd is installed
+  yum: pkg=php-gd state=installed
+  notify:
+    - restart httpd
+
+- name: php-mbstring is installed
+  yum: pkg=php-mbstring state=installed
+  notify:
+    - restart httpd
+
+- name: php-mysql is installed
+  yum: pkg=php-mysql state=installed
+  notify:
+    - restart httpd
+
+- name: php is configured
+  notify:
+    - restart httpd
+  copy: src="php.ini" dest="/etc/php.ini" owner=root group=root mode=0644
+
+# contents directory
+- name: document root exists
+  file: path=/vagrant/wordpress state=directory owner=vagrant group=apache mode=2775
+
+- name: wordpress/packages is writable for httpd
+  file: path=/vagrant/wordpress/packages state=directory owner=vagrant group=apache mode=2775
+
+- name: wordpress/application/config is writable for httpd
+  file: path=/vagrant/wordpress/application/config state=directory owner=vagrant group=apache mode=2775
+
+- name: wordpress/application/files is writable for httpd
+  file: path=/vagrant/wordpress/application/files state=directory owner=vagrant group=apache mode=2775
+
+# virtual host
+- name: wordpress is configured
+  notify:
+    - restart httpd
+  copy: src="wordpress.conf" dest="/etc/httpd/conf.d/wordpress.conf" owner=root group=root mode=0644
+
