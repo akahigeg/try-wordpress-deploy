@@ -16,12 +16,17 @@ dependencies:
     - chmod +x wp-cli.phar
 
     - cp wordpress/wp-config.ci.php wordpress/wp-config.php
+    - echo $USER
 
     # Install WordPress
     - ./wp-cli.phar core install --allow-root --admin_name=admin --admin_password=admin --admin_email=admin@example.com --url=http://wp-deploy.dev:8080 --title=WordPress --path=/home/ubuntu/try-wordpress-deploy/wordpress
 
     # And use WP-CLI to activate it
     #- ./wp-cli.phar plugin activate wppusher --path=wordpress
+    - sudo apt-get update
+    - sudo apt-get install default-jre
+    - sudo apt-get install default-jdk
+    - java -version
 
   post:
     # Configure Apache
@@ -33,4 +38,10 @@ test:
   override:
     - ./wp-cli.phar plugin list --path=/home/ubuntu/try-wordpress-deploy/wordpress
 
+deployment:
+  staging:
+    branch: test-circle-ci-env
+    commands:
+      - cp wordpress/wp-config.ninja.php wordpress/wp-config.php
+      - java -jar tools/webdav_sync.jar -up -u https://$WEBDAV_USER:$WEBDAV_PASSWORD@$WEBDAV_HOST/ -d wordpress
 # TODO: deploy
