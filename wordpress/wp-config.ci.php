@@ -21,7 +21,7 @@
 
 // ** MySQL 設定 - この情報はホスティング先から入手してください。 ** //
 /** WordPress のためのデータベース名 */
-define('DB_NAME', 'circle_ci');
+define('DB_NAME', 'circle_test');
 
 /** MySQL データベースのユーザー名 */
 define('DB_USER', 'ubuntu');
