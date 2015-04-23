@@ -32,4 +32,4 @@ dependencies:
 test:
   override:
     # This is just for us to see that the WP Pusher plugin was actually installed and is active
-    - ./wp-cli.phar plugin list --path=/tmp/try-wordpress-deploy/wordpress
+    - ./wp-cli.phar plugin list --path=/home/ubuntu/try-wordpress-deploy/wordpress
