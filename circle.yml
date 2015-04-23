@@ -32,3 +32,5 @@ dependencies:
 test:
   override:
     - ./wp-cli.phar plugin list --path=/home/ubuntu/try-wordpress-deploy/wordpress
+
+# TODO: deploy
