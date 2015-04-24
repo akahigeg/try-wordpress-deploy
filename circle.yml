@@ -40,7 +40,7 @@ test:
 
 deployment:
   staging:
-    branch: test-circle-ci-env
+    branch: try-php-ninja
     commands:
       - cp wordpress/wp-config.ninja.php wordpress/wp-config.php
       - java -jar tools/webdav_sync.jar -up -u https://$WEBDAV_USER:$WEBDAV_PASSWORD@$WEBDAV_HOST/ -d wordpress
